@@ -1,15 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using Viventium.Business.Infrastructure;
+
 namespace Viventium.WebAPI.Controllers
 {
 
     /// <summary>
-    /// Viventiume Test endpoints
+    /// Viventium Test endpoints
     /// </summary>
     [Controller]
-    public class DefaultController : Controller
+    public class CompanyController : Controller
     {
+        private readonly ICompanyService _companyService;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="companyService">Service to handle company operations</param>
+        public CompanyController(Business.Infrastructure.ICompanyService companyService)
+        {
+            _companyService = companyService;
+        }
         /// <summary>
         /// Imports data in CSV format
         /// </summary>
