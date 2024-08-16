@@ -8,5 +8,6 @@ namespace Viventium.Business.Infrastructure
 {
     public interface ICompanyService
     {
+        Task<List<string>> ImportCSV(Stream stream);
     }
 }

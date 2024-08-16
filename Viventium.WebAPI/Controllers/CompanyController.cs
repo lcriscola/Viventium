@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic.FileIO;
 
 using Viventium.Business.Infrastructure;
 
@@ -25,9 +26,17 @@ namespace Viventium.WebAPI.Controllers
         /// Imports data in CSV format
         /// </summary>
         /// <returns></returns>
-        [HttpPost("/dataStore")]        
-        public IActionResult Import()
+        [HttpPost("/dataStore")]
+        public async Task<ActionResult> Import(IFormFile fileData)
         {
+            if (fileData == null)
+                return this.BadRequest("No file was sent.");
+
+            var errors = await _companyService.ImportCSV(fileData.OpenReadStream());
+            if (errors.Count > 0)
+            {
+                return this.BadRequest(errors);
+            }
             return this.Ok();
         }
 
