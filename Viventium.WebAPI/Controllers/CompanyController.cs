@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic.FileIO;
 
+using Swashbuckle.AspNetCore.Annotations;
+
 using Viventium.Business.Infrastructure;
 
 namespace Viventium.WebAPI.Controllers
@@ -23,10 +25,14 @@ namespace Viventium.WebAPI.Controllers
             _companyService = companyService;
         }
         /// <summary>
-        /// Imports data in CSV format
+        /// Accepts the CSV data and replaces (clears and imports) the data in the store with the provided one.
         /// </summary>
         /// <returns></returns>
         [HttpPost("/dataStore")]
+        [SwaggerResponse(200)]
+        [SwaggerResponse(400, "Some validation error was found.")]
+        [SwaggerResponse(500,"Unhandled exception")]
+
         public async Task<ActionResult> Import(IFormFile fileData)
         {
             if (fileData == null)
@@ -41,34 +47,43 @@ namespace Viventium.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Returns all companies ordered by Id
+        /// Returns the list of CompanyHeader objects
         /// </summary>
         /// <returns></returns>
         [HttpGet("/companies")]
-        public IActionResult GetCompanies()
+        [SwaggerResponse(200)]
+        [SwaggerResponse(400, "Some validation error was found.")]
+        [SwaggerResponse(500, "Unhandled exception")]
+        public ActionResult<DTOs.CompanyHeader> GetCompanies()
         {
             return this.Ok();
         }
 
         /// <summary>
-        /// Returns a company based on its id
+        /// Returns the Company object by provided ID
         /// </summary>
         /// <param name="companyId">The company Id</param>
         /// <returns></returns>
         [HttpGet("/companies/{companyId:int}")]
-        public IActionResult GetCompany(int companyId)
+        [SwaggerResponse(200)]
+        [SwaggerResponse(400, "Some validation error was found.")]
+        [SwaggerResponse(500, "Unhandled exception")]
+        public ActionResult<DTOs.Company> GetCompany(int companyId)
         {
             return this.Ok();
         }
 
         /// <summary>
-        /// Returns an employee based on the company id and the employee id.
+        /// Returns the Employee object by provided company ID and employee number
         /// </summary>
         /// <param name="companyId">The company Id</param>
         /// <param name="employeeNumber">The employee number</param>
         /// <returns></returns>
+        [SwaggerResponse(200)]
+        [SwaggerResponse(400, "Some validation error was found.")]
+        [SwaggerResponse(500, "Unhandled exception")]
         [HttpGet("/companies/{companyId}/employees/{employeeNumber}")]
-        public IActionResult GetEmployee(int companyId, string employeeNumber)
+        public ActionResult<DTOs.Employee> GetEmployee(int companyId, string employeeNumber)
         {
             return this.Ok();
         }

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Viventium.DTOs\Viventium.DTOs.csproj" />
+    <ProjectReference Include="..\Viventium.Models\Viventium.Models.csproj" />
     <ProjectReference Include="..\Viventium.Repositores\Viventium.Repositores.csproj" />
   </ItemGroup>
 
