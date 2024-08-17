@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.Data.Common;
 
 using Viventium.Models;
 using Viventium.Models.DB;
@@ -46,6 +49,8 @@ namespace Viventium.Business
                     var model = ImportModel.Parse(line);
                     model.LineNumber = index;
 
+
+                    //Validation #1. The employeeNumber should be unique within a given company. 
                     if (allEmployees.ContainsKey(new CompanyEmployeeId(model.CompanyId, model.EmployeeNumber)))
                     {
                         throw new ValidationException($"{model.CompanyId} {model.EmployeeNumber} already exists  in {model.LineNumber}");
@@ -75,7 +80,7 @@ namespace Viventium.Business
             {
                 var eoi = emp.Value; //Employee to Import
 
-                //if it has a manager set, check if it is an employee
+                //Validation #2. The manager of the given employee should exist in the same company.
                 if (eoi.ManagerEmployeeNumber is not null)
                 {
                     //check if manager is an employee
@@ -117,18 +122,23 @@ namespace Viventium.Business
 
             if (errors.Count == 0)
             {
-                //now we can do the saving
-                await TruncateData();
+                //now we can do the saving. Abort and rollback if there is any error
+                var transaction = await _db.Database.BeginTransactionAsync();
+                await TruncateData(transaction.GetDbTransaction());
                 await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
             return errors;
         }
 
-        private async Task TruncateData()
+        private async Task TruncateData(DbTransaction transaction)
         {
             var cn = _db.Database.GetDbConnection();
-            await cn.OpenAsync();
+            if (cn.State != ConnectionState.Open )
+                await cn.OpenAsync();
+
             using var cmd = cn.CreateCommand();
+            cmd.Transaction = transaction;
             cmd.CommandText = "exec TruncateData";
             await cmd.ExecuteNonQueryAsync();
         }
