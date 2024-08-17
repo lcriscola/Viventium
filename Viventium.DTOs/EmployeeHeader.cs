@@ -8,7 +8,7 @@ namespace Viventium.DTOs
 {
     public class EmployeeHeader
     {
-        String EmployeeNumber; // EmployeeNumber
-        String FullName; // "{EmployeeFirstName} {EmployeeLastName}"
+        public required String EmployeeNumber {get;set;} // EmployeeNumber
+        public required  String FullName { get; set; } // "{EmployeeFirstName} {EmployeeLastName}"
     }
 }

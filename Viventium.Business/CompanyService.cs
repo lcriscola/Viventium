@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Common;
 
+using Viventium.DTOs;
 using Viventium.Models;
-using Viventium.Models.DB;
 using Viventium.Repositores;
 
 namespace Viventium.Business
@@ -22,7 +22,7 @@ namespace Viventium.Business
 
         public async Task<List<DTOs.CompanyHeader>> GetCompanies()
         {
-            var data = await _db.Companies.Include(x => x.Employees)
+            var data = await _db.Companies
                 .Select(x => new DTOs.CompanyHeader()
                 {
                     Code = x.Code,
@@ -31,6 +31,27 @@ namespace Viventium.Business
                     EmployeeCount = x.Employees.Count()
                 })
                 .ToListAsync();
+            return data;
+        }
+
+        public async Task<DTOs.Company> GetCompany(int companyId)
+        {
+            var data = await _db.Companies
+                .Include(x=> x.Employees)
+                .Where(x=> x.CompanyId == companyId)
+                .Select(x=>new DTOs.Company()
+                {
+                    Code = x.Code,
+                    Description = x.Description,
+                    Id = x.CompanyId,
+                    EmployeeCount = x.Employees!.Count(),
+                    Employees = x.Employees!.Select(x=> new DTOs.EmployeeHeader()
+                    {
+                        EmployeeNumber = x.EmployeeNumber,
+                        FullName    = $"{x.FirstName} {x.LastName}"
+                    }).ToArray()
+                })
+                .FirstOrDefaultAsync();
             return data;
         }
 
@@ -109,7 +130,7 @@ namespace Viventium.Business
                 //check if the company as been added already. if not create it and put in the db context to be saved later.
                 if (!companies.TryGetValue(eoi.CompanyId, out var company))
                 {
-                    company = new Company()
+                    company = new Models.DB.Company()
                     {
                         Code = eoi.CompanyCode,
                         CompanyId = eoi.CompanyId,

@@ -8,6 +8,6 @@ namespace Viventium.DTOs
 {
     public class Company : CompanyHeader
     {
-        EmployeeHeader[] Employees; // List of EmployeeHeader objects in the given company
+       public required EmployeeHeader[] Employees { get; set; } // List of EmployeeHeader objects in the given company
     }
 }
