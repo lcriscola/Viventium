@@ -36,9 +36,9 @@ namespace Viventium.WebAPI.Controllers
         [SwaggerResponse(400, "Some validation error was found.")]
         [SwaggerResponse(500,"Unhandled exception")]
 
-        public async Task<ActionResult> Import(IFormFile fileData)
+        public async Task<ActionResult> Import(IFormFile? fileData)
         {
-            if (fileData == null)
+            if (fileData is null)
                 return this.BadRequest("No file was sent.");
 
             var errors = await _companyService.ImportCSV(fileData.OpenReadStream());
