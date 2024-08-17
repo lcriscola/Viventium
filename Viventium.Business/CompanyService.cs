@@ -215,27 +215,13 @@ namespace Viventium.Business
             {
                 //now we can do the saving. Abort and rollback if there is any error
                 var transaction = await _db.Database.BeginTransactionAsync();
-                await TruncateData(transaction.GetDbTransaction());
+                await _db.Employees.ExecuteDeleteAsync();
+                await _db.Companies.ExecuteDeleteAsync();
                 await _db.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
             return errors;
         }
-
-        private async Task TruncateData(DbTransaction transaction)
-        {
-            await _db.Employees.ExecuteDeleteAsync();
-            await _db.Companies.ExecuteDeleteAsync();
-
-            //or we can run a stored procedure that does the work.
-            var cn = _db.Database.GetDbConnection();
-            if (cn.State != ConnectionState.Open )
-                await cn.OpenAsync();
-
-            using var cmd = cn.CreateCommand();
-            cmd.Transaction = transaction;
-            cmd.CommandText = "exec TruncateData";
-            await cmd.ExecuteNonQueryAsync();
-        }
+ 
     }
 }
