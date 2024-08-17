@@ -25,7 +25,7 @@ namespace Viventium.Models
 
         public static ImportModel Parse(string line)
         {
-            var parts = line.Split(',', StringSplitOptions.TrimEntries);
+            var parts = line.Split(',', StringSplitOptions.TrimEntries).Select(x=> x.Trim()).ToArray();
 
             if (parts.Length != 10)
             {

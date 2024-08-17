@@ -2,9 +2,9 @@
 {
     public class Employee : EmployeeHeader
     {
-        String Email; // EmployeeEmail
-        String Department; // EmployeeDepartment
-        DateTime HireDate; // HireDate
-        EmployeeHeader[] Managers; // List of EmployeeHeaders of the managers, ordered ascending by seniority (i.e. the immediate manager first)
+        public required String Email { get; set; } // EmployeeEmail
+        public required String Department { get; set; } // EmployeeDepartment
+        public DateTime? HireDate { get; set; } // HireDate. Did a little change and is nullable so I can use DateTime instead of string
+        public required EmployeeHeader[]  Managers { get; set; } // List of EmployeeHeaders of the managers, ordered ascending by seniority (i.e. the immediate manager first)
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 
 using Viventium.DTOs;
 using Viventium.Models;
@@ -20,7 +22,7 @@ namespace Viventium.Business
             _db = db;
         }
 
-        public async Task<List<DTOs.CompanyHeader>> GetCompanies()
+        public async Task<DTOs.CompanyHeader[]> GetCompanies()
         {
             var data = await _db.Companies
                 .Select(x => new DTOs.CompanyHeader()
@@ -28,13 +30,13 @@ namespace Viventium.Business
                     Code = x.Code,
                     Description = x.Description,
                     Id = x.CompanyId,
-                    EmployeeCount = x.Employees.Count()
+                    EmployeeCount = x.Employees!.Count()
                 })
-                .ToListAsync();
+                .ToArrayAsync();
             return data;
         }
 
-        public async Task<DTOs.Company> GetCompany(int companyId)
+        public async Task<DTOs.Company?> GetCompany(int companyId)
         {
             var data = await _db.Companies
                 .Include(x=> x.Employees)
@@ -48,11 +50,65 @@ namespace Viventium.Business
                     Employees = x.Employees!.Select(x=> new DTOs.EmployeeHeader()
                     {
                         EmployeeNumber = x.EmployeeNumber,
-                        FullName    = $"{x.FirstName} {x.LastName}"
+                        FullName    = x.FirstName + " " + x.LastName
                     }).ToArray()
                 })
                 .FirstOrDefaultAsync();
             return data;
+        }
+
+        public async Task<Employee?> GetEmployee(int companyId, string employeeNumber)
+        {
+            var data = await _db.Employees
+                .Where(x => x.CompanyId == companyId && x.EmployeeNumber == employeeNumber)
+                .Select(x=> new DTOs.Employee()
+                {
+                    Department=x.Department,
+                    Email=x.Email,
+                    EmployeeNumber = employeeNumber,
+                    FullName=x.FirstName + " " + x.LastName,
+                    HireDate=x.HireDate,
+                    Managers = new EmployeeHeader[] { } // List of EmployeeHeaders of the managers, ordered ascending by seniority (i.e. the immediate manager first)
+                })
+                .FirstOrDefaultAsync();
+            if (data is null)
+                return data;
+
+            var managers = await GetManagers(companyId, employeeNumber);
+            data.Managers = managers;
+            return data;
+        }
+
+        private async Task<EmployeeHeader[]> GetManagers(int companyId, string employeeNumber)
+        {
+
+
+
+            var allEmployees = await _db.Employees.Where(x => x.CompanyId == companyId)
+                    .Select(x=> new EmployeeNumberFullNameManager (x.EmployeeNumber, x.FirstName + " " + x.LastName, x.ManagerEmployeeNumber))
+                    .ToDictionaryAsync(x => x.EmployeeNumber);
+            var currentEmployee = allEmployees[employeeNumber]; //this wont fail since at this point the employee is present. UNLESS it was deleted during the call
+            List<EmployeeNumberFullNameManager> managers = new ();
+            
+            AddManagers(allEmployees, managers, currentEmployee);
+
+
+            return   managers.Select(x=>new EmployeeHeader() {
+                EmployeeNumber = x.EmployeeNumber,
+                FullName = x.FullName
+            }).ToArray();
+        }
+
+        private void AddManagers(Dictionary<string, EmployeeNumberFullNameManager> allEmployees, List<EmployeeNumberFullNameManager> managers, EmployeeNumberFullNameManager currentEmployee)
+        {
+            if (currentEmployee.ManagerEmployeeNumber is null)
+                return;
+
+            var managerEmployee = allEmployees[currentEmployee.ManagerEmployeeNumber];
+            var manager = new EmployeeNumberFullNameManager(managerEmployee.EmployeeNumber, managerEmployee.FullName, managerEmployee.ManagerEmployeeNumber);
+            managers.Add(manager);
+
+            AddManagers(allEmployees, managers, manager);
         }
 
         public async Task<List<string>> ImportCSV(Stream stream)

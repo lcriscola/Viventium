@@ -3,6 +3,8 @@ using Microsoft.VisualBasic.FileIO;
 
 using Swashbuckle.AspNetCore.Annotations;
 
+using System;
+
 using Viventium.Business.Infrastructure;
 
 namespace Viventium.WebAPI.Controllers
@@ -54,7 +56,7 @@ namespace Viventium.WebAPI.Controllers
         [HttpGet("/companies")]
         [SwaggerResponse(200)]
         [SwaggerResponse(500, "Unhandled exception")]
-        public async Task<ActionResult<List<DTOs.CompanyHeader>>> GetCompanies()
+        public async Task<ActionResult<DTOs.CompanyHeader[]>> GetCompanies()
         {
             var data = await _companyService.GetCompanies();
             return this.Ok(data);
@@ -67,12 +69,12 @@ namespace Viventium.WebAPI.Controllers
         /// <returns></returns>
         [HttpGet("/companies/{companyId:int}")]
         [SwaggerResponse(200)]
-        [SwaggerResponse(400, "Some validation error was found.")]
+        [SwaggerResponse(404, "Company Id not found.")]
         [SwaggerResponse(500, "Unhandled exception")]
         public async Task<ActionResult<DTOs.Company>> GetCompany(int companyId)
         {
             var data = await _companyService.GetCompany(companyId);
-            if (data==null)
+            if (data is null)
                 return this.NotFound(companyId);
              
             return this.Ok(data);
@@ -85,12 +87,17 @@ namespace Viventium.WebAPI.Controllers
         /// <param name="employeeNumber">The employee number</param>
         /// <returns></returns>
         [SwaggerResponse(200)]
-        [SwaggerResponse(400, "Some validation error was found.")]
+        [SwaggerResponse(404, "Company id or EmployeeId not found.")]
         [SwaggerResponse(500, "Unhandled exception")]
-        [HttpGet("/companies/{companyId}/employees/{employeeNumber}")]
-        public ActionResult<DTOs.Employee> GetEmployee(int companyId, string employeeNumber)
+        [HttpGet("/companies/{companyId:int}/employees/{employeeNumber}")]
+        public async Task<ActionResult<DTOs.Employee>> GetEmployee(int companyId, string employeeNumber)
         {
-            return this.Ok();
+
+            var data = await _companyService.GetEmployee(companyId, employeeNumber);
+            if (data is null)
+                return this.NotFound(companyId);
+
+            return this.Ok(data);
         }
     }
 }
