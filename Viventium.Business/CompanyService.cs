@@ -1,13 +1,22 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
 using Viventium.Models;
+using Viventium.Repositores;
 
 namespace Viventium.Business
 {
     public class CompanyService : Infrastructure.ICompanyService
     {
+        private readonly ViventiumDataContext _db;
+
+        public CompanyService(Repositores.ViventiumDataContext db)
+        {
+            _db = db;
+        }
         public async Task<List<string>> ImportCSV(Stream stream)
         {
 
@@ -15,9 +24,12 @@ namespace Viventium.Business
 
             using var sr = new StreamReader(stream);
             int index = 0;
-            var headers = await sr.ReadLineAsync();
-            Dictionary<CompanyEmployeeId, ImportModel> assigndManagers = new();
+            Dictionary<CompanyEmployeeId, ImportModel> assignedManagers = new();
             Dictionary<CompanyEmployeeId, ImportModel> allEmployees = new();
+
+
+            //skip first line
+            var headers = await sr.ReadLineAsync();
 
             while (!sr.EndOfStream)
             {
@@ -41,10 +53,11 @@ namespace Viventium.Business
 
 
 
-                    //Assuming employees with no manager are managers.
+
+                    //store the manager so I can check them for valid employee once all employees are parsed.
                     if (model.ManagerEmployeeNumber is not null)
                     {
-                        assigndManagers[new (model.CompanyId, model.ManagerEmployeeNumber)] = model;
+                        assignedManagers[new (model.CompanyId, model.ManagerEmployeeNumber)] = model;
                     }
 
                 }
@@ -56,7 +69,7 @@ namespace Viventium.Business
             }
 
             //make sure that the assigned managers are real employees
-            foreach (var mgr in assigndManagers)
+            foreach (var mgr in assignedManagers)
             {
                 var companyId = mgr.Key.CompanyId;
                 var managerId = mgr.Key.EmployeeId;
@@ -68,9 +81,24 @@ namespace Viventium.Business
             }
 
             //now we can do the saving
+            await TruncateData();
 
+            var list=  _db.Companies.ToList();
+            var list2=  _db.Employees
+                    .Include(x=> x.Company)
+                    .Include(x=> x.Manager)
+                    .ToList();
 
             return errors;
+        }
+
+        private async Task TruncateData()
+        {
+                var cn = _db.Database.GetDbConnection();
+                await cn.OpenAsync();
+                using var cmd = cn.CreateCommand();
+                cmd.CommandText = "exec TruncateData";
+                await cmd.ExecuteNonQueryAsync();
         }
     }
 }
