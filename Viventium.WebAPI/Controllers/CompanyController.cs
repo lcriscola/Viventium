@@ -26,6 +26,7 @@ namespace Viventium.WebAPI.Controllers
         }
         /// <summary>
         /// Accepts the CSV data and replaces (clears and imports) the data in the store with the provided one.
+        /// All rows in the CSV data must be valid for the import to succeed. If there is at lease one error, No data will be Deletred/Inserted.
         /// </summary>
         /// <returns></returns>
         [HttpPost("/dataStore")]

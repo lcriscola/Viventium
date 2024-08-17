@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 using Viventium.Business;
+using Viventium.Repositores;
 
 var builder = WebApplication.CreateBuilder(args);
 

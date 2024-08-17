@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 
 using Viventium.Models;
+using Viventium.Models.DB;
 using Viventium.Repositores;
 
 namespace Viventium.Business
@@ -17,6 +16,7 @@ namespace Viventium.Business
         {
             _db = db;
         }
+
         public async Task<List<string>> ImportCSV(Stream stream)
         {
 
@@ -27,8 +27,10 @@ namespace Viventium.Business
             Dictionary<CompanyEmployeeId, ImportModel> assignedManagers = new();
             Dictionary<CompanyEmployeeId, ImportModel> allEmployees = new();
 
+            Dictionary<int, Models.DB.Company> companies = new();
 
-            //skip first line
+
+            //skip first line with headers
             var headers = await sr.ReadLineAsync();
 
             while (!sr.EndOfStream)
@@ -57,7 +59,7 @@ namespace Viventium.Business
                     //store the manager so I can check them for valid employee once all employees are parsed.
                     if (model.ManagerEmployeeNumber is not null)
                     {
-                        assignedManagers[new (model.CompanyId, model.ManagerEmployeeNumber)] = model;
+                        assignedManagers[new(model.CompanyId, model.ManagerEmployeeNumber)] = model;
                     }
 
                 }
@@ -69,36 +71,66 @@ namespace Viventium.Business
             }
 
             //make sure that the assigned managers are real employees
-            foreach (var mgr in assignedManagers)
+            foreach (var emp in allEmployees)
             {
-                var companyId = mgr.Key.CompanyId;
-                var managerId = mgr.Key.EmployeeId;
+                var eoi = emp.Value; //Employee to Import
 
-                if (!allEmployees.TryGetValue(new CompanyEmployeeId(companyId, managerId), out var employee))
+                //if it has a manager set, check if it is an employee
+                if (eoi.ManagerEmployeeNumber is not null)
                 {
-                    errors.Add($"Line {mgr.Value.LineNumber}. Manager {managerId} was not found as an employee in Company Id {companyId}");
+                    //check if manager is an employee
+                    if (!allEmployees.TryGetValue(new CompanyEmployeeId(eoi.CompanyId, eoi.ManagerEmployeeNumber), out var employee))
+                    {
+                        errors.Add($"Line {eoi.LineNumber}. Manager {eoi.ManagerEmployeeNumber} was not found as an employee in Company Id {eoi.CompanyId}");
+                        continue;
+                    }
                 }
+
+
+                //check if the company as been added already. if not create it and put in the db context to be saved later.
+                if (!companies.TryGetValue(eoi.CompanyId, out var company))
+                {
+                    company = new Company()
+                    {
+                        Code = eoi.CompanyCode,
+                        CompanyId = eoi.CompanyId,
+                        Description = eoi.CompanyDescription
+                    };
+                    companies.Add(company.CompanyId, company);
+                    _db.Add(company);
+                }
+                _db.Add(new Models.DB.Employee()
+                {
+                    CompanyId = company.CompanyId,
+                    Department =eoi.EmployeeDepartment,
+                    Email = eoi.EmployeeEmail,
+                    EmployeeNumber = eoi.EmployeeNumber,
+                    FirstName   =eoi.EmployeeFirstName,
+                    LastName =eoi.EmployeeLastName,
+                    HireDate=eoi.HireDate,
+                    ManagerEmployeeNumber = eoi.ManagerEmployeeNumber
+                });
+                //if the employee is ready to be stored
+
             }
 
-            //now we can do the saving
-            await TruncateData();
 
-            var list=  _db.Companies.ToList();
-            var list2=  _db.Employees
-                    .Include(x=> x.Company)
-                    .Include(x=> x.Manager)
-                    .ToList();
-
+            if (errors.Count == 0)
+            {
+                //now we can do the saving
+                await TruncateData();
+                await _db.SaveChangesAsync();
+            }
             return errors;
         }
 
         private async Task TruncateData()
         {
-                var cn = _db.Database.GetDbConnection();
-                await cn.OpenAsync();
-                using var cmd = cn.CreateCommand();
-                cmd.CommandText = "exec TruncateData";
-                await cmd.ExecuteNonQueryAsync();
+            var cn = _db.Database.GetDbConnection();
+            await cn.OpenAsync();
+            using var cmd = cn.CreateCommand();
+            cmd.CommandText = "exec TruncateData";
+            await cmd.ExecuteNonQueryAsync();
         }
     }
 }
