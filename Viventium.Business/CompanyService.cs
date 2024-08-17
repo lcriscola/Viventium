@@ -20,6 +20,20 @@ namespace Viventium.Business
             _db = db;
         }
 
+        public async Task<List<DTOs.CompanyHeader>> GetCompanies()
+        {
+            var data = await _db.Companies.Include(x => x.Employees)
+                .Select(x => new DTOs.CompanyHeader()
+                {
+                    Code = x.Code,
+                    Description = x.Description,
+                    Id = x.CompanyId,
+                    EmployeeCount = x.Employees.Count()
+                })
+                .ToListAsync();
+            return data;
+        }
+
         public async Task<List<string>> ImportCSV(Stream stream)
         {
 

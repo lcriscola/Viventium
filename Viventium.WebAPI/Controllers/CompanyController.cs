@@ -55,9 +55,10 @@ namespace Viventium.WebAPI.Controllers
         [SwaggerResponse(200)]
         [SwaggerResponse(400, "Some validation error was found.")]
         [SwaggerResponse(500, "Unhandled exception")]
-        public ActionResult<DTOs.CompanyHeader> GetCompanies()
+        public async Task<ActionResult<List<DTOs.CompanyHeader>>> GetCompanies()
         {
-            return this.Ok();
+            var data = await _companyService.GetCompanies();
+            return this.Ok(data);
         }
 
         /// <summary>

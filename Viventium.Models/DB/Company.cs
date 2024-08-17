@@ -17,5 +17,7 @@ namespace Viventium.Models.DB
         public required string Code { get; set; }
 
         public required string Description { get; set; }
+
+        public ICollection<Employee>? Employees { get; set; }  
     }
 }

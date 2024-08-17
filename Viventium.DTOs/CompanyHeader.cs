@@ -9,9 +9,9 @@ namespace Viventium.DTOs
 {
     public class CompanyHeader
     {
-        int Id; // CompanyId
-        String Code; // CompanyCode
-        String Description; // CompanyDescription
-        int EmployeeCount; // Number of Employees in the given company
+        public int Id { get; set; } // CompanyId
+        public required String Code { get; set; } // CompanyCode
+        public required String Description { get; set; } // CompanyDescription
+        public required int EmployeeCount { get; set; } // Number of Employees in the given company
     }
 }
