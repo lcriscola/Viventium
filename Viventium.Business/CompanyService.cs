@@ -152,10 +152,8 @@ namespace Viventium.Business
 
             using var sr = new StreamReader(stream);
             int index = 0;
-            Dictionary<CompanyEmployeeId, ImportModel> assignedManagers = new();
             Dictionary<CompanyEmployeeId, ImportModel> allEmployees = new();
 
-            Dictionary<int, Models.DB.Company> companies = new();
 
 
             //skip first line with headers
@@ -184,14 +182,6 @@ namespace Viventium.Business
                     allEmployees.Add(new CompanyEmployeeId(model.CompanyId, model.EmployeeNumber), model);
 
 
-
-
-                    //store the manager so I can check them for valid employee once all employees are parsed.
-                    if (model.ManagerEmployeeNumber is not null)
-                    {
-                        assignedManagers[new(model.CompanyId, model.ManagerEmployeeNumber)] = model;
-                    }
-
                 }
                 catch (ValidationException ex)
                 {
@@ -199,6 +189,9 @@ namespace Viventium.Business
                 }
 
             }
+
+
+            Dictionary<int, Models.DB.Company> companies = new();
 
             //make sure that the assigned managers are real employees
             foreach (var emp in allEmployees)
