@@ -81,16 +81,15 @@ namespace Viventium.Business
 
         private async Task<EmployeeHeader[]> GetManagers(int companyId, string employeeNumber)
         {
-
-
-
-            var allEmployees = await _db.Employees.Where(x => x.CompanyId == companyId)
+            //save all employees
+            var employeeNumberToEmployee = await _db.Employees.Where(x => x.CompanyId == companyId)
                     .Select(x=> new EmployeeNumberFullNameManager (x.EmployeeNumber, x.FirstName + " " + x.LastName, x.ManagerEmployeeNumber))
                     .ToDictionaryAsync(x => x.EmployeeNumber);
-            var currentEmployee = allEmployees[employeeNumber]; //this wont fail since at this point the employee is present. UNLESS it was deleted during the call
+
+            var currentEmployee = employeeNumberToEmployee[employeeNumber]; //this wont fail since at this point the employee is present. UNLESS it was deleted during the call
             List<EmployeeNumberFullNameManager> managers = new ();
             
-            AddManagers(allEmployees, managers, currentEmployee);
+            AddManagers(employeeNumberToEmployee, managers, currentEmployee);
 
 
             return   managers.Select(x=>new EmployeeHeader() {
