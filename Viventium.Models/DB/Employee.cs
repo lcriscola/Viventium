@@ -14,7 +14,7 @@ namespace Viventium.Models.DB
 
 
         [ForeignKey(nameof(Company))]
-        public int CompanyId { get; set; }
+        public required int CompanyId { get; set; }
         public Company? Company { get; set; }
 
         public required string EmployeeNumber { get; set; }

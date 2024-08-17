@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
+using Newtonsoft.Json.Linq;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +54,7 @@ namespace Viventium.Tests.Controllers.CompanyControllers
             """;
 
         [Test]
-        public async Task ImportFile_With_No_Errors()
+        public async Task ImportFile_With_No_Errors_Should_Return_200()
         {
             var file = GetFile(EmployeeHierarchyText);
             _companyService.Setup(x => x.ImportCSV(It.IsAny<Stream>())).ReturnsAsync(new List<string>());
@@ -62,7 +64,7 @@ namespace Viventium.Tests.Controllers.CompanyControllers
             Assert.IsInstanceOf<OkResult>(action);
         }
         [Test]
-        public async Task ImportFile_With_Validation_Errors()
+        public async Task ImportFile_With_Validation_Errors_Should_Return_400()
         {
             var file = GetFile(EmployeeHierarchyText);
             _companyService.Setup(x => x.ImportCSV(It.IsAny<Stream>())).ReturnsAsync(new List<string>() { "some error" });
@@ -73,7 +75,7 @@ namespace Viventium.Tests.Controllers.CompanyControllers
         }
 
         [Test]
-        public async Task ImportFile_With_No_File_Errors()
+        public async Task ImportFile_With_No_File_Should_Return_400()
         {
             _companyService.Setup(x => x.ImportCSV(It.IsAny<Stream>())).ReturnsAsync(new List<string>() { "some error" });
             var action = await _controller.Import(null);

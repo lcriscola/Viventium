@@ -15,6 +15,11 @@ namespace Viventium.Repositores
                 
         }
 
+        public ViventiumDataContext()
+        {
+            
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Models.DB.Employee>()
@@ -24,7 +29,7 @@ namespace Viventium.Repositores
 
             base.OnModelCreating(modelBuilder);
         }
-        public DbSet<Models.DB.Company> Companies { get; set; }
-        public DbSet<Models.DB.Employee> Employees{ get; set; }
+        public virtual DbSet<Models.DB.Company> Companies { get; set; }
+        public virtual DbSet<Models.DB.Employee> Employees{ get; set; }
     }
 }

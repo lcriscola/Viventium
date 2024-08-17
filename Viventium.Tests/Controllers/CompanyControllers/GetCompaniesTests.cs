@@ -24,7 +24,7 @@ namespace Viventium.Tests.Controllers.CompanyControllers
         Mock<Business.Infrastructure.ICompanyService> _companyService;
         
         [Test]
-        public async Task Test_OK()
+        public async Task A_List_Should_Return_200()
         {
             _companyService.Setup(x => x.GetCompanies()).ReturnsAsync([new DTOs.CompanyHeader() { Code="1", Description="description", EmployeeCount=1, Id=1}]);
             var action = await _controller.GetCompanies();

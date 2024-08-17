@@ -25,7 +25,7 @@ namespace Viventium.Tests.Controllers.CompanyControllers
 
 
         [Test]
-        public async Task Test_NotFound()
+        public async Task Null_Employee_Should_Return_NotFound()
         {
             _companyService.Setup(x => x.GetEmployee(1, "E1")).ReturnsAsync(() => null);
 
@@ -35,7 +35,7 @@ namespace Viventium.Tests.Controllers.CompanyControllers
         }
 
         [Test]
-        public async Task Test_OK()
+        public async Task Valid_Employee_Should_Return_200()
         {
             _companyService.Setup(x => x.GetEmployee(1, "E1")).ReturnsAsync(() => new DTOs.Employee()
             {
@@ -50,6 +50,8 @@ namespace Viventium.Tests.Controllers.CompanyControllers
 
             var action = await _controller.GetEmployee(1, "E1");
             var result = (OkObjectResult)action.Result!;
+            Assert.That(result.StatusCode, Is.EqualTo(200));
+
             var value = (DTOs.Employee)result.Value!;
 
             Assert.That(value.EmployeeNumber, Is.EqualTo("E1"));
