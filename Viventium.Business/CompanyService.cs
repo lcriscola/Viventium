@@ -57,57 +57,92 @@ namespace Viventium.Business
             return data;
         }
 
+        //this version of GetEmployee, I decied to retrive all employees and then loop recursivelly to find all the managers
+        //previos version, required 2 queries , one to get the current employee and another one to retrieve all .Si I decied to use one query
+
         public async Task<Employee?> GetEmployee(int companyId, string employeeNumber)
         {
-            var data = await _db.Employees
-                .Where(x => x.CompanyId == companyId && x.EmployeeNumber == employeeNumber)
+
+            //retriev all employees so I can
+            var employeeNumberToEmployee = await _db.Employees
+                .Where(x=> x.CompanyId == companyId)
                 .Select(x=> new DTOs.Employee()
                 {
                     Department=x.Department,
                     Email=x.Email,
-                    EmployeeNumber = employeeNumber,
+                    EmployeeNumber = x.EmployeeNumber,
                     FullName=x.FirstName + " " + x.LastName,
                     HireDate=x.HireDate,
+                    ManagerEmployeeNumber = x.ManagerEmployeeNumber,
                     Managers = new EmployeeHeader[] { } // List of EmployeeHeaders of the managers, ordered ascending by seniority (i.e. the immediate manager first)
                 })
-                .FirstOrDefaultAsync();
-            if (data is null)
-                return data;
+                .ToDictionaryAsync(x=> x.EmployeeNumber);
 
-            var managers = await GetManagers(companyId, employeeNumber);
-            data.Managers = managers;
+
+            if (employeeNumberToEmployee.Count() ==0)
+                return null;
+
+            if (!employeeNumberToEmployee.TryGetValue(employeeNumber, out var currentEmployee))
+                return null;
+
+            List<Employee> managers = new();
+            AddManagers(employeeNumberToEmployee, managers, currentEmployee);
+            var data = employeeNumberToEmployee[employeeNumber];
+            data.Managers = managers.Select(x => new EmployeeHeader() { EmployeeNumber = x.EmployeeNumber, FullName = x.FullName }).ToArray();
             return data;
         }
 
-        private async Task<EmployeeHeader[]> GetManagers(int companyId, string employeeNumber)
-        {
-            //save all employees
-            var employeeNumberToEmployee = await _db.Employees.Where(x => x.CompanyId == companyId)
-                    .Select(x=> new EmployeeNumberFullNameManager (x.EmployeeNumber, x.FirstName + " " + x.LastName, x.ManagerEmployeeNumber))
-                    .ToDictionaryAsync(x => x.EmployeeNumber);
 
-            var currentEmployee = employeeNumberToEmployee[employeeNumber]; //this wont fail since at this point the employee is present. UNLESS it was deleted during the call
-            List<EmployeeNumberFullNameManager> managers = new ();
-            
-            AddManagers(employeeNumberToEmployee, managers, currentEmployee);
+        //public async Task<Employee?> GetEmployee(int companyId, string employeeNumber)
+        //{
+        //    var data = await _db.Employees
+        //        .Where(x => x.CompanyId == companyId && x.EmployeeNumber == employeeNumber)
+        //        .Select(x => new DTOs.Employee()
+        //        {
+        //            Department = x.Department,
+        //            Email = x.Email,
+        //            EmployeeNumber = employeeNumber,
+        //            FullName = x.FirstName + " " + x.LastName,
+        //            HireDate = x.HireDate,
+        //            Managers = new EmployeeHeader[] { } // List of EmployeeHeaders of the managers, ordered ascending by seniority (i.e. the immediate manager first)
+        //        })
+        //        .FirstOrDefaultAsync();
+        //    if (data is null)
+        //        return data;
+
+        //    var managers = await GetManagers(companyId, employeeNumber);
+        //    data.Managers = managers;
+        //    return data;
+        //}
+
+        //private async Task<EmployeeHeader[]> GetManagers(int companyId, string employeeNumber)
+        //{
+        //    //save all employees
+        //    var employeeNumberToEmployee = await _db.Employees.Where(x => x.CompanyId == companyId)
+        //            .Select(x=> new EmployeeNumberFullNameManager (x.EmployeeNumber, x.FirstName + " " + x.LastName, x.ManagerEmployeeNumber))
+        //            .ToDictionaryAsync(x => x.EmployeeNumber);
+
+        //    var currentEmployee = employeeNumberToEmployee[employeeNumber]; //this wont fail since at this point the employee is present. UNLESS it was deleted during the call
+        //    List<EmployeeNumberFullNameManager> managers = new ();
+
+        //    AddManagers(employeeNumberToEmployee, managers, currentEmployee);
 
 
-            return   managers.Select(x=>new EmployeeHeader() {
-                EmployeeNumber = x.EmployeeNumber,
-                FullName = x.FullName
-            }).ToArray();
-        }
+        //    return   managers.Select(x=>new EmployeeHeader() {
+        //        EmployeeNumber = x.EmployeeNumber,
+        //        FullName = x.FullName
+        //    }).ToArray();
+        //}
 
-        private void AddManagers(Dictionary<string, EmployeeNumberFullNameManager> allEmployees, List<EmployeeNumberFullNameManager> managers, EmployeeNumberFullNameManager currentEmployee)
+        private void AddManagers(Dictionary<string, Employee> allEmployees, List<Employee> managers, Employee currentEmployee)
         {
             if (currentEmployee.ManagerEmployeeNumber is null)
                 return;
 
             var managerEmployee = allEmployees[currentEmployee.ManagerEmployeeNumber];
-            var manager = new EmployeeNumberFullNameManager(managerEmployee.EmployeeNumber, managerEmployee.FullName, managerEmployee.ManagerEmployeeNumber);
-            managers.Add(manager);
+            managers.Add(managerEmployee);
 
-            AddManagers(allEmployees, managers, manager);
+            AddManagers(allEmployees, managers, managerEmployee);
         }
 
         public async Task<List<string>> ImportCSV(Stream stream)
