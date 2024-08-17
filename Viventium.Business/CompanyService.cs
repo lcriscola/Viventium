@@ -224,6 +224,10 @@ namespace Viventium.Business
 
         private async Task TruncateData(DbTransaction transaction)
         {
+            await _db.Employees.ExecuteDeleteAsync();
+            await _db.Companies.ExecuteDeleteAsync();
+
+            //or we can run a stored procedure that does the work.
             var cn = _db.Database.GetDbConnection();
             if (cn.State != ConnectionState.Open )
                 await cn.OpenAsync();
