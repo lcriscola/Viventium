@@ -4,6 +4,7 @@ using Microsoft.VisualBasic.FileIO;
 using Swashbuckle.AspNetCore.Annotations;
 
 using System;
+using System.IO;
 
 using Viventium.Business.Infrastructure;
 
@@ -27,6 +28,22 @@ namespace Viventium.WebAPI.Controllers
             _companyService = companyService;
         }
         /// <summary>
+        /// Accepts the CSV data as a STREAM (Binary file) and replaces (clears and imports) the data in the store with the provided one.
+        /// All rows in the CSV data must be valid for the import to succeed. If there is at lease one error, No data will be Deletred/Inserted.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("/dataStore/stream")]
+        [RequestSizeLimit(200_000_000)]
+        public async Task<ActionResult> ImportUsingStream()
+        {
+            var errors = await _companyService.ImportCSV(Request.Body);
+            if (errors.Count > 0)
+            {
+                return this.BadRequest(errors);
+            }
+            return this.Ok();
+        }
+        /// <summary>
         /// Accepts the CSV data and replaces (clears and imports) the data in the store with the provided one.
         /// All rows in the CSV data must be valid for the import to succeed. If there is at lease one error, No data will be Deletred/Inserted.
         /// </summary>
@@ -41,7 +58,8 @@ namespace Viventium.WebAPI.Controllers
             if (fileData is null)
                 return this.BadRequest("No file was sent.");
 
-            var errors = await _companyService.ImportCSV(fileData.OpenReadStream());
+            using var stream = fileData.OpenReadStream();
+            var errors = await _companyService.ImportCSV(stream);
             if (errors.Count > 0)
             {
                 return this.BadRequest(errors);

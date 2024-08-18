@@ -161,10 +161,10 @@ namespace Viventium.Business
             //skip first line with headers
             var headers = await sr.ReadLineAsync();
 
-            while (!sr.EndOfStream)
+            string? line = "";
+            while ( (line = await sr.ReadLineAsync()  ) !=null )
             {
                 index++;
-                string line = (await sr.ReadLineAsync())!;
 
                 try
                 {
