@@ -1,5 +1,4 @@
 ﻿using Moq;
-using Moq.EntityFrameworkCore;
 
 namespace Viventium.Tests.BusinessTests.CompanyService
 {
@@ -9,21 +8,17 @@ namespace Viventium.Tests.BusinessTests.CompanyService
         [SetUp]
         public void Setup()
         {
-            db = new Mock<Repositores.ViventiumDataContext>();
-            service = new Viventium.Business.CompanyService(db.Object);
-
-
+            _repo = new Mock<Repositores.Infrastructure.IGenericRepository>();
+            _service = new Viventium.Business.CompanyService(_repo.Object);
         }
-        Viventium.Business.CompanyService service;
-        Mock<Repositores.ViventiumDataContext> db;
-
+        Viventium.Business.CompanyService _service;
+        Mock<Repositores.Infrastructure.IGenericRepository> _repo;
         [Test]
         public async Task GetCompnies_Should_Return_A_List()
         {
-            db.Setup(x => x.Companies).ReturnsDbSet(DataHelper.GetCompanies());
+            _repo.Setup(x => x.Set<Models.DB.Company>()).Returns(DataHelper.AsDBSet(DataHelper.GetCompanies()));
 
-
-            var companiesDto = await service.GetCompanies();
+            var companiesDto = await _service.GetCompanies();
             Assert.That(companiesDto.Length, Is.EqualTo(2));
             Assert.That(companiesDto[0].EmployeeCount, Is.EqualTo(2));
             Assert.That(companiesDto[1].EmployeeCount, Is.EqualTo(3));

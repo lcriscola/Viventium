@@ -18,5 +18,7 @@ namespace Viventium.Repositores.Infrastructure
         Task CommitTransaction(IDbContextTransaction transaction);
         DbSet<T> Set<T>() where T : class;
         Task SaveChangesAsync();
+
+        Task ExecuteDeleteAsync<T>() where T : class;
     }
 }

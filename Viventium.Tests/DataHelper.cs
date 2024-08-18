@@ -1,4 +1,10 @@
-﻿using Viventium.Models.DB;
+﻿using Microsoft.EntityFrameworkCore;
+
+using MockQueryable.Moq;
+
+using Moq;
+
+using Viventium.Models.DB;
 
 namespace Viventium.Tests
 {
@@ -245,6 +251,19 @@ namespace Viventium.Tests
                 1,Whiskey,Whiskey Description,M1,Free,Alderman,falderman0@dot.gov,Accounting,,
                 1,Whiskey,Whiskey Description,M2,Free,Alderman,falderman0@dot.gov,Accounting,,
                 """";
+        }
+
+
+        internal static DbSet<T> AsDBSet<T>(IEnumerable<T> items) where T : class
+        {
+            var mock = items.AsQueryable().BuildMockDbSet<T>();
+            return mock.Object;
+        }
+
+        internal static DbSet<T> AsDBSet<T>(params T[] items) where T : class
+        {
+            var mock = items.AsQueryable().BuildMockDbSet<T>();
+            return mock.Object;
         }
     }
 }

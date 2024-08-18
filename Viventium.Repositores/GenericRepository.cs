@@ -45,5 +45,9 @@ namespace Viventium.Repositores
             return transaction.CommitAsync();
         }
 
+        public Task ExecuteDeleteAsync<T>() where T : class
+        {
+            return _db.Set<T>().ExecuteDeleteAsync();
+        }
     }
 }

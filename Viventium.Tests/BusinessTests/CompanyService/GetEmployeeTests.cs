@@ -1,5 +1,4 @@
 ﻿using Moq;
-using Moq.EntityFrameworkCore;
 
 namespace Viventium.Tests.BusinessTests.CompanyService
 {
@@ -9,18 +8,21 @@ namespace Viventium.Tests.BusinessTests.CompanyService
         [SetUp]
         public void Setup()
         {
-            db = new Mock<Repositores.ViventiumDataContext>();
-            service = new Viventium.Business.CompanyService(db.Object);
+            _repo = new Mock<Repositores.Infrastructure.IGenericRepository>();
+            _service = new Viventium.Business.CompanyService(_repo.Object);
+
+
         }
-        Viventium.Business.CompanyService service;
-        Mock<Repositores.ViventiumDataContext> db;
+        Viventium.Business.CompanyService _service;
+        Mock<Repositores.Infrastructure.IGenericRepository> _repo;
+
 
         [Test]
         public async Task Invalid_Company_Should_Return_Null()
         {
-            db.Setup(x => x.Employees).ReturnsDbSet(DataHelper.GetEmployees());
+            _repo.Setup(x => x.Set<Models.DB.Employee>()).Returns(DataHelper.AsDBSet(DataHelper.GetEmployees()));
 
-            var employees = await service.GetEmployee(3,"E1");
+            var employees = await _service.GetEmployee(3,"E1");
             Assert.That(employees, Is.Null);
         }
 
@@ -28,12 +30,12 @@ namespace Viventium.Tests.BusinessTests.CompanyService
         [Test]
         public async Task Invalid_Employee_Should_Return_Null()
         {
-            db.Setup(x => x.Employees).ReturnsDbSet(DataHelper.GetEmployees());
+            _repo.Setup(x => x.Set<Models.DB.Employee>()).Returns(DataHelper.AsDBSet(DataHelper.GetEmployees()));
 
-            var employees = await service.GetEmployee(1, "E1");
+            var employees = await _service.GetEmployee(1, "E1");
             Assert.That(employees, Is.Not.Null);
 
-            employees = await service.GetEmployee(1, "X3");
+            employees = await _service.GetEmployee(1, "X3");
             Assert.That(employees, Is.Null);
 
         }
@@ -42,16 +44,15 @@ namespace Viventium.Tests.BusinessTests.CompanyService
         [Test]
         public async Task Valid_Employee_Should_Return_DTO()
         {
-            db.Setup(x => x.Employees).ReturnsDbSet(DataHelper.GetEmployees());
+            _repo.Setup(x => x.Set<Models.DB.Employee>()).Returns(DataHelper.AsDBSet(DataHelper.GetEmployees()));
 
-
-            var employee = await service.GetEmployee(2, "E1");
+            var employee = await _service.GetEmployee(2, "E1");
             if (employee is null)
                 throw new Exception("empoloyee is null");
 
             Assert.That(employee.FullName, Is.EqualTo("first_name last_name"));
 
-            employee = await service.GetEmployee(1, "E1");
+            employee = await _service.GetEmployee(1, "E1");
             if (employee is null)
                throw new Exception("empoloyee is null");
 
@@ -61,7 +62,7 @@ namespace Viventium.Tests.BusinessTests.CompanyService
 
 
 
-            employee = await service.GetEmployee(1, "M1");
+            employee = await _service.GetEmployee(1, "M1");
 
             if (employee is null)
                 throw new Exception("empoloyee is null");

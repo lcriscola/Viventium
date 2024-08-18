@@ -245,8 +245,8 @@ namespace Viventium.Business
             {
                 //now we can do the saving. Abort and rollback if there is any error
                 var transaction = await _repo.BeginTransactionAsync();
-                await _repo.Set<Models.DB.Employee>().ExecuteDeleteAsync();
-                await _repo.Set<Models.DB.Company>().ExecuteDeleteAsync();
+                await _repo.ExecuteDeleteAsync<Models.DB.Employee>();
+                await _repo.ExecuteDeleteAsync<Models.DB.Company>();
                 await _repo.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
