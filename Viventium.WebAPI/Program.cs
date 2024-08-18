@@ -25,11 +25,21 @@ builder.Services.AddSwaggerGen(x =>
 
 builder.Services.AddDbContext<Viventium.Repositores.ViventiumDataContext>(b =>
 {
-    b.UseSqlServer(builder.Configuration.GetConnectionString("Viventium")); //110 so openjson is not used  for in(1,2,3) cases
-}); 
+    b.UseSqlServer(builder.Configuration.GetConnectionString("Viventium")); 
+});
 
+builder.WebHost.ConfigureKestrel((options) =>
+{
+    options.ConfigureEndpointDefaults(lo => lo.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2);
+});
 
 var app = builder.Build();
+
+
+app.UseCors(x =>
+{
+    x.WithOrigins("http://localhost:4200");
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -39,7 +49,6 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.UseAuthorization();
 
 app.MapControllers();
 

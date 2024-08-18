@@ -1,1 +1,39 @@
-<p>demo works!</p>
+<p>Demo Page</p>
+<div class="row col">
+    <form>
+        <div class="mt-4">
+            <div>
+                Simple Upload
+                <input type="file" #fileSimpleControl (change)="fileSimple=fileSimpleControl.files?.item(0)"  />
+            </div>
+            <button type="button" class="btn btn-primary" (click)="uploadSimple()">Upload</button>
+        </div>
+        <div class="mt-4">
+            <div>
+                Binary Stream Upload
+                <input type="file" #fileBinaryControl (change)="fileBinary=fileBinaryControl.files?.item(0)" />
+            </div>
+            <button type="button" class="btn btn-primary" (click)="uploadBinary()">Upload</button>
+        </div>
+
+
+        <div>
+            @if (errors){
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Error</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @for(  item of errors; track item){
+                    <tr>
+                        <td>{{item}}</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            }
+        </div>
+    </form>
+</div>
