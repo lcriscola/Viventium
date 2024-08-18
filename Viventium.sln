@@ -5,13 +5,13 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Viventium.WebAPI", "Viventium.WebAPI\Viventium.WebAPI.csproj", "{891F27D1-AD4A-46B5-B169-D973A36FF051}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Viventium.Business", "Viventium.Business\Viventium.Business.csproj", "{51F1EF8D-094B-443E-8B51-B11CB89259DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Viventium.Business", "Viventium.Business\Viventium.Business.csproj", "{51F1EF8D-094B-443E-8B51-B11CB89259DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Viventium.Repositores", "Viventium.Repositores\Viventium.Repositores.csproj", "{7A6A36AD-09D6-442B-BA12-C049E85173FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Viventium.Repositores", "Viventium.Repositores\Viventium.Repositores.csproj", "{7A6A36AD-09D6-442B-BA12-C049E85173FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Viventium.DTOs", "Viventium.DTOs\Viventium.DTOs.csproj", "{31F9E056-CCB3-4667-AE9D-E10474614436}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Viventium.DTOs", "Viventium.DTOs\Viventium.DTOs.csproj", "{31F9E056-CCB3-4667-AE9D-E10474614436}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Viventium.Tests", "Viventium.Tests\Viventium.Tests.csproj", "{68C9E077-90F2-4332-B02F-93F3E415EBBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Viventium.Tests", "Viventium.Tests\Viventium.Tests.csproj", "{68C9E077-90F2-4332-B02F-93F3E415EBBD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{06A6D07D-A1DA-44BE-9DE0-4AE29E945517}"
 	ProjectSection(SolutionItems) = preProject
@@ -23,7 +23,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Viventium - Home Assignment Specs.pdf = Viventium - Home Assignment Specs.pdf
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Viventium.Models", "Viventium.Models\Viventium.Models.csproj", "{39EB01A9-1C3B-4BD1-906C-747F84EBB1AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Viventium.Models", "Viventium.Models\Viventium.Models.csproj", "{39EB01A9-1C3B-4BD1-906C-747F84EBB1AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Viventium.Frontend", "Viventium.Frontend\Viventium.Frontend.csproj", "{4DB2BA04-C4FD-4777-B190-A352FEB76853}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,9 @@ Global
 		{39EB01A9-1C3B-4BD1-906C-747F84EBB1AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39EB01A9-1C3B-4BD1-906C-747F84EBB1AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39EB01A9-1C3B-4BD1-906C-747F84EBB1AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB2BA04-C4FD-4777-B190-A352FEB76853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB2BA04-C4FD-4777-B190-A352FEB76853}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB2BA04-C4FD-4777-B190-A352FEB76853}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
