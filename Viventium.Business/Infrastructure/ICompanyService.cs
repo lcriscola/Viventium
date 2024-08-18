@@ -14,5 +14,6 @@ namespace Viventium.Business.Infrastructure
         Task<DTOs.Company?> GetCompany(int companyId);
         Task<Employee?> GetEmployee(int companyId, string employeeNumber);
         Task<List<string>> ImportCSV(Stream stream);
+        Task<List<string>> ImportCSV2(Stream stream);
     }
 }

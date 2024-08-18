@@ -28,10 +28,10 @@ builder.Services.AddDbContext<Viventium.Repositores.ViventiumDataContext>(b =>
     b.UseSqlServer(builder.Configuration.GetConnectionString("Viventium")); 
 });
 
-builder.WebHost.ConfigureKestrel((options) =>
-{
-    options.ConfigureEndpointDefaults(lo => lo.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2);
-});
+//builder.WebHost.ConfigureKestrel((options) =>
+//{
+//    options.ConfigureEndpointDefaults(lo => lo.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2);
+//});
 
 var app = builder.Build();
 
