@@ -31,6 +31,51 @@
 			"response": []
 		},
 		{
+			"name": "Upload CSV File Small Data",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data; boundary=----WebKitFormBoundary0bF17GSmalpgaEcM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "------WebKitFormBoundary0bF17GSmalpgaEcM\r\nContent-Disposition: form-data; name=\"fileData\"; filename=\"data.csv\"\r\nContent-Type: text/csv\r\n\r\nCompanyId,CompanyCode,CompanyDescription,EmployeeNumber,EmployeeFirstName,EmployeeLastName,EmployeeEmail,EmployeeDepartment,HireDate,ManagerEmployeeNumber\r\n1,Whiskey,Whiskey Description,E1,Free,Alderman,falderman0@dot.gov,Accounting,,S1\r\n1,Whiskey,Whiskey Description,E2,Free,Alderman,falderman0@dot.gov,Accounting,,S1\r\n1,Whiskey,Whiskey Description,E3,Free,Alderman,falderman0@dot.gov,Accounting,,S2\r\n1,Whiskey,Whiskey Description,E4,Free,Alderman,falderman0@dot.gov,Accounting,,S2\r\n1,Whiskey,Whiskey Description,E5,Free,Alderman,falderman0@dot.gov,Accounting,,S3\r\n1,Whiskey,Whiskey Description,E6,Free,Alderman,falderman0@dot.gov,Accounting,,S3\r\n1,Whiskey,Whiskey Description,E7,Free,Alderman,falderman0@dot.gov,Accounting,,S4\r\n1,Whiskey,Whiskey Description,E8,Free,Alderman,falderman0@dot.gov,Accounting,,S4\r\n1,Whiskey,Whiskey Description,S1,Free,Alderman,falderman0@dot.gov,Accounting,,M1\r\n1,Whiskey,Whiskey Description,S2,Free,Alderman,falderman0@dot.gov,Accounting,,M1\r\n1,Whiskey,Whiskey Description,S3,Free,Alderman,falderman0@dot.gov,Accounting,,M2\r\n1,Whiskey,Whiskey Description,S4,Free,Alderman,falderman0@dot.gov,Accounting,,M2\r\n1,Whiskey,Whiskey Description,M1,Free,Alderman,falderman0@dot.gov,Accounting,,\r\n1,Whiskey,Whiskey Description,M2,Free,Alderman,falderman0@dot.gov,Accounting,,\r\n\r\n\r\n------WebKitFormBoundary0bF17GSmalpgaEcM--",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": "{{baseUrl}}/DataStore"
+			},
+			"response": []
+		},
+		{
+			"name": "Upload CSV Stream",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data; boundary=----WebKitFormBoundary0bF17GSmalpgaEcM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": "/C:/Projects/Viventium/Files/DATA.csv"
+					}
+				},
+				"url": "{{baseUrl}}/DataStore/stream"
+			},
+			"response": []
+		},
+		{
 			"name": "Get Companies",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true

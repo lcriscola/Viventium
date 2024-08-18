@@ -52,6 +52,7 @@ namespace Viventium.WebAPI.Controllers
         [SwaggerResponse(200)]
         [SwaggerResponse(400, "Some validation error was found.")]
         [SwaggerResponse(500,"Unhandled exception")]
+        [RequestSizeLimit(200_000_000)]
 
         public async Task<ActionResult> Import(IFormFile? fileData)
         {
