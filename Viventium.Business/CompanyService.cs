@@ -92,7 +92,7 @@ namespace Viventium.Business
             return data;
         }
 
-
+        #region Old Code
         //public async Task<Employee?> GetEmployee(int companyId, string employeeNumber)
         //{
         //    var data = await _db.Employees
@@ -133,6 +133,8 @@ namespace Viventium.Business
         //        FullName = x.FullName
         //    }).ToArray();
         //}
+        #endregion
+
 
         private void AddManagers(Dictionary<string, Employee> allEmployees, List<Employee> managers, Employee currentEmployee)
         {
