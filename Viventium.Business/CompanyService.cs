@@ -10,21 +10,22 @@ using System.Diagnostics.CodeAnalysis;
 using Viventium.DTOs;
 using Viventium.Models;
 using Viventium.Repositores;
+using Viventium.Repositores.Infrastructure;
 
 namespace Viventium.Business
 {
     public class CompanyService : Infrastructure.ICompanyService
     {
-        private readonly ViventiumDataContext _db;
+        private readonly IGenericRepository _repo;
 
-        public CompanyService(Repositores.ViventiumDataContext db)
+        public CompanyService(Repositores.Infrastructure.IGenericRepository repo)
         {
-            _db = db;
+            _repo = repo;
         }
 
         public async Task<DTOs.CompanyHeader[]> GetCompanies()
         {
-            var data = await _db.Companies
+            var data = await _repo.Set<Models.DB.Company>()
                 .Select(x => new DTOs.CompanyHeader()
                 {
                     Code = x.Code,
@@ -38,7 +39,7 @@ namespace Viventium.Business
 
         public async Task<DTOs.Company?> GetCompany(int companyId)
         {
-            var data = await _db.Companies
+            var data = await _repo.Set<Models.DB.Company>()
                 .Include(x=> x.Employees)
                 .Where(x=> x.CompanyId == companyId)
                 .Select(x=>new DTOs.Company()
@@ -64,7 +65,7 @@ namespace Viventium.Business
         {
 
             //retriev all employees so I can
-            var employeeNumberToEmployee = await _db.Employees
+            var employeeNumberToEmployee = await _repo.Set<Models.DB.Employee>()
                 .Where(x=> x.CompanyId == companyId)
                 .Select(x=> new DTOs.Employee()
                 {
@@ -222,9 +223,9 @@ namespace Viventium.Business
                         Description = eoi.CompanyDescription
                     };
                     companies.Add(company.CompanyId, company);
-                    _db.Add(company);
+                    _repo.Add(company);
                 }
-                _db.Add(new Models.DB.Employee()
+                _repo.Add(new Models.DB.Employee()
                 {
                     CompanyId = company.CompanyId,
                     Department =eoi.EmployeeDepartment,
@@ -243,10 +244,10 @@ namespace Viventium.Business
             if (errors.Count == 0)
             {
                 //now we can do the saving. Abort and rollback if there is any error
-                var transaction = await _db.Database.BeginTransactionAsync();
-                await _db.Employees.ExecuteDeleteAsync();
-                await _db.Companies.ExecuteDeleteAsync();
-                await _db.SaveChangesAsync();
+                var transaction = await _repo.BeginTransactionAsync();
+                await _repo.Set<Models.DB.Employee>().ExecuteDeleteAsync();
+                await _repo.Set<Models.DB.Company>().ExecuteDeleteAsync();
+                await _repo.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
             return errors;
