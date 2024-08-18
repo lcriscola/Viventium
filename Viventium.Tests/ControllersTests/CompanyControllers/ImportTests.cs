@@ -35,28 +35,11 @@ namespace Viventium.Tests.Controllers.CompanyControllers
             return file;
         }
 
-        const string EmployeeHierarchyText = """
-            CompanyId,CompanyCode,CompanyDescription,EmployeeNumber,EmployeeFirstName,EmployeeLastName,EmployeeEmail,EmployeeDepartment,HireDate,ManagerEmployeeNumber
-            1,Whiskey,Whiskey Description,E1,Free,Alderman,falderman0@dot.gov,Accounting,,S1
-            1,Whiskey,Whiskey Description,E2,Free,Alderman,falderman0@dot.gov,Accounting,,S1
-            1,Whiskey,Whiskey Description,E3,Free,Alderman,falderman0@dot.gov,Accounting,,S2
-            1,Whiskey,Whiskey Description,E4,Free,Alderman,falderman0@dot.gov,Accounting,,S2
-            1,Whiskey,Whiskey Description,E5,Free,Alderman,falderman0@dot.gov,Accounting,,S3
-            1,Whiskey,Whiskey Description,E6,Free,Alderman,falderman0@dot.gov,Accounting,,S3
-            1,Whiskey,Whiskey Description,E7,Free,Alderman,falderman0@dot.gov,Accounting,,S4
-            1,Whiskey,Whiskey Description,E8,Free,Alderman,falderman0@dot.gov,Accounting,,S4
-            1,Whiskey,Whiskey Description,S1,Free,Alderman,falderman0@dot.gov,Accounting,,M1
-            1,Whiskey,Whiskey Description,S2,Free,Alderman,falderman0@dot.gov,Accounting,,M1
-            1,Whiskey,Whiskey Description,S3,Free,Alderman,falderman0@dot.gov,Accounting,,M2
-            1,Whiskey,Whiskey Description,S4,Free,Alderman,falderman0@dot.gov,Accounting,,M2
-            1,Whiskey,Whiskey Description,M1,Free,Alderman,falderman0@dot.gov,Accounting,,
-            1,Whiskey,Whiskey Description,M2,Free,Alderman,falderman0@dot.gov,Accounting,,
-            """;
-
+ 
         [Test]
         public async Task ImportFile_With_No_Errors_Should_Return_200()
         {
-            var file = GetFile(EmployeeHierarchyText);
+            var file = GetFile(DataHelper.GetFileContent());
             _companyService.Setup(x => x.ImportCSV(It.IsAny<Stream>())).ReturnsAsync(new List<string>());
 
             var action = await _controller.Import(file);
@@ -66,7 +49,7 @@ namespace Viventium.Tests.Controllers.CompanyControllers
         [Test]
         public async Task ImportFile_With_Validation_Errors_Should_Return_400()
         {
-            var file = GetFile(EmployeeHierarchyText);
+            var file = GetFile(DataHelper.GetFileContent());
             _companyService.Setup(x => x.ImportCSV(It.IsAny<Stream>())).ReturnsAsync(new List<string>() { "some error" });
 
             var action = await _controller.Import(file);

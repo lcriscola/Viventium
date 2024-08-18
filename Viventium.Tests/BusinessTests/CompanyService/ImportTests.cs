@@ -1,74 +1,41 @@
 ﻿using Moq;
 using Moq.EntityFrameworkCore;
 
+using static System.Net.Mime.MediaTypeNames;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+
 namespace Viventium.Tests.BusinessTests.CompanyService
 {
+    /// <summary>
+    /// In tnhis test I am using the InMemory provider instead of faking the context since the code is using transactions
+    /// With a pure Repository Pattern (instead of relying on EF) I shoud not do this.
+    /// </summary>
     public class ImportTests
     {
 
         [SetUp]
         public void Setup()
         {
-            db = new Mock<Repositores.ViventiumDataContext>();
-            service = new Viventium.Business.CompanyService(db.Object);
+            var options = new DbContextOptionsBuilder<Repositores.ViventiumDataContext>()
+                .UseInMemoryDatabase("ViventiumDataContext")
+                    .ConfigureWarnings(b => b.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+                .Options;
+
+            db = new Viventium.Repositores.ViventiumDataContext(options);
+            service = new Viventium.Business.CompanyService(db);
         }
         Viventium.Business.CompanyService service;
-        Mock<Repositores.ViventiumDataContext> db;
+        Repositores.ViventiumDataContext db;
 
         [Test]
-        public async Task Invalid_Company_Should_Return_Null()
+        public async Task Import_With_Valid_Data_Shoud_Return_No_Errors()
         {
-            db.Setup(x => x.Employees).ReturnsDbSet(DataHelper.GetEmployees());
-
-            var employees = await service.GetEmployee(3,"E1");
-            Assert.That(employees, Is.Null);
+            using var st = new MemoryStream(Encoding.UTF8.GetBytes(DataHelper.GetFileContent()));
+            var employees = await service.ImportCSV(st);
+            Assert.That(employees.Count, Is.EqualTo(0));
         }
 
-
-        [Test]
-        public async Task Invalid_Employee_Should_Return_Null()
-        {
-            db.Setup(x => x.Employees).ReturnsDbSet(DataHelper.GetEmployees());
-
-            var employees = await service.GetEmployee(1, "E1");
-            Assert.That(employees, Is.Not.Null);
-
-            employees = await service.GetEmployee(1, "X3");
-            Assert.That(employees, Is.Null);
-
-        }
-
-
-        [Test]
-        public async Task Valid_Employee_Should_Return_DTO()
-        {
-            db.Setup(x => x.Employees).ReturnsDbSet(DataHelper.GetEmployees());
-
-
-            var employee = await service.GetEmployee(2, "E1");
-            if (employee is null)
-                throw new Exception("empoloyee is null");
-
-            Assert.That(employee.FullName, Is.EqualTo("first_name last_name"));
-
-            employee = await service.GetEmployee(1, "E1");
-            if (employee is null)
-               throw new Exception("empoloyee is null");
-
-            Assert.That(employee.FullName, Is.EqualTo("first_name last_name"));
-            Assert.That(employee.Managers[0].EmployeeNumber, Is.EqualTo("S1"));
-            Assert.That(employee.Managers[1].EmployeeNumber, Is.EqualTo("M1"));
-
-
-
-            employee = await service.GetEmployee(1, "M1");
-
-            if (employee is null)
-                throw new Exception("empoloyee is null");
-
-            Assert.That(employee.Managers.Count(), Is.EqualTo(0));
-
-
-        }
     }
 }
