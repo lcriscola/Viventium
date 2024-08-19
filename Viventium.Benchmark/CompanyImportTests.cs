@@ -43,9 +43,9 @@ namespace Viventium.Benchmark
 
         }
 
-        private CompanyService GetService()
+        private static CompanyService GetService()
         {
-            DbContextOptionsBuilder<ViventiumDataContext> builder = new DbContextOptionsBuilder<ViventiumDataContext>();
+            DbContextOptionsBuilder<ViventiumDataContext> builder = new ();
             builder.UseSqlServer("Server=(local); Database=Viventium; Integrated Security=true; Encrypt=false;Application NAme=Viventium v1.0");
 
             Microsoft.EntityFrameworkCore.DbContextOptions<ViventiumDataContext> options = builder.Options;
@@ -72,12 +72,10 @@ namespace Viventium.Benchmark
         }
 
 
-        private Stream GetStream()
+        static private Stream GetStream()
         {
             return File.Open(@"..\..\..\..\Files\Data.csv", FileMode.Open);
         }
-
-    
 
     }
 

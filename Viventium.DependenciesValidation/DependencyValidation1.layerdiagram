@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<layerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="4f2e56db-e06f-4dce-910c-aa1e4e36c8b4" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/LayerDesigner">
+  <layers>
+    <layer Id="055bbe44-3508-4431-8924-a51186457834" name="Viventium.Business.dll">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="22458aa2-0d7a-4e0f-94d2-fe36c43ded90" direction="Forward">
+          <layerMoniker Id="abc70eb7-2ab2-4d67-825b-b13d71973b34" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="e20d8276-69a3-4628-88b3-2b21ba9dd10a" direction="Forward">
+          <layerMoniker Id="4a02345d-c462-4206-8073-cc961fa40a65" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="e1d4140d-1e28-4f2f-8b3e-28c6bb3889f1" direction="Forward">
+          <layerMoniker Id="824104cf-e83f-4f09-b512-8a247bc5701c" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="d6d34447-135b-4908-bf47-afdc8229b28d" name="Viventium.Business.dll">
+          <ArtifactNode Label="Viventium.Business.dll" Category="CodeSchema_Assembly" Id="(Assembly=../Viventium.Business/bin/Debug/net8.0/Viventium.Business.dll)" />
+          <ExpandedNode Id="(Assembly=Viventium.Business)" Label="Viventium.Business.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="4a02345d-c462-4206-8073-cc961fa40a65" name="Viventium.DTOs.dll">
+      <references>
+        <reference Id="0ed5b73c-43da-4330-9cfe-c9be2f103092" name="Viventium.DTOs.dll">
+          <ArtifactNode Label="Viventium.DTOs.dll" Category="CodeSchema_Assembly" Id="(Assembly=../Viventium.DTOs/bin/Debug/net8.0/Viventium.DTOs.dll)" />
+          <ExpandedNode Id="(Assembly=Viventium.DTOs)" Label="Viventium.DTOs.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="824104cf-e83f-4f09-b512-8a247bc5701c" name="Viventium.Models.dll">
+      <references>
+        <reference Id="0c7f01cd-d702-4d0d-b9ba-7d3bcbb39f8e" name="Viventium.Models.dll">
+          <ArtifactNode Label="Viventium.Models.dll" Category="CodeSchema_Assembly" Id="(Assembly=../Viventium.Models/bin/Debug/net8.0/Viventium.Models.dll)" />
+          <ExpandedNode Id="(Assembly=Viventium.Models)" Label="Viventium.Models.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="abc70eb7-2ab2-4d67-825b-b13d71973b34" name="Viventium.Repositores.dll">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="33df0e5a-c6d6-4cab-b413-c847787d7bba" direction="Forward">
+          <layerMoniker Id="824104cf-e83f-4f09-b512-8a247bc5701c" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="6024d69c-e832-48d2-a6e4-5b3f992e9e25" name="Viventium.Repositores.dll">
+          <ArtifactNode Label="Viventium.Repositores.dll" Category="CodeSchema_Assembly" Id="(Assembly=../Viventium.Repositores/bin/Debug/net8.0/Viventium.Repositores.dll)" />
+          <ExpandedNode Id="(Assembly=Viventium.Repositores)" Label="Viventium.Repositores.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="9d9971a6-b55f-4f50-ad27-f343f49f5ff7" name="Viventium.WebAPI.dll">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="181ef583-59f2-451e-a5e5-80419eb0427e" direction="Forward">
+          <layerMoniker Id="055bbe44-3508-4431-8924-a51186457834" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="0c74ab48-4912-4f3e-adcd-d95d53a90a3e" direction="Forward">
+          <layerMoniker Id="4a02345d-c462-4206-8073-cc961fa40a65" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="31099f11-9da6-4258-a300-60f6fa183448" name="Viventium.WebAPI.dll">
+          <ArtifactNode Label="Viventium.WebAPI.dll" Category="CodeSchema_Assembly" Id="(Assembly=../Viventium.WebAPI/bin/Debug/net8.0/Viventium.WebAPI.dll)" />
+          <ExpandedNode Id="(Assembly=Viventium.WebAPI)" Label="Viventium.WebAPI.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+  </layers>
+</layerModel>
