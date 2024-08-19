@@ -20,7 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Dockerfile = Dockerfile
 		r.cmd = r.cmd
 		README.md = README.md
-		Viventium - Home Assignment Specs.pdf = Viventium - Home Assignment Specs.pdf
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Viventium.Models", "Viventium.Models\Viventium.Models.csproj", "{39EB01A9-1C3B-4BD1-906C-747F84EBB1AC}"
