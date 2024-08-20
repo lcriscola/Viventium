@@ -43,6 +43,7 @@ namespace Viventium.WebAPI.Controllers
             }
             return this.Ok();
         }
+
         /// <summary>
         /// Accepts the CSV data and replaces (clears and imports) the data in the store with the provided one.
         /// All rows in the CSV data must be valid for the import to succeed. If there is at lease one error, No data will be Deletred/Inserted.
@@ -53,7 +54,6 @@ namespace Viventium.WebAPI.Controllers
         [SwaggerResponse(400, "Some validation error was found.")]
         [SwaggerResponse(500,"Unhandled exception")]
         [RequestSizeLimit(200_000_000)]
-
         public async Task<ActionResult> Import(IFormFile? fileData)
         {
             if (fileData is null)

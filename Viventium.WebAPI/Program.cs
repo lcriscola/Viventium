@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddViventiumBusinessServices();
-builder.Services.AddViventiumRepositories();
+builder.Services.AddViventiumRepositories(builder.Configuration.GetConnectionString("Viventium")!);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -23,10 +23,6 @@ builder.Services.AddSwaggerGen(x =>
 });
 
 
-builder.Services.AddDbContext<Viventium.Repositores.ViventiumDataContext>(b =>
-{
-    b.UseSqlServer(builder.Configuration.GetConnectionString("Viventium")); 
-});
 
 //builder.WebHost.ConfigureKestrel((options) =>
 //{
