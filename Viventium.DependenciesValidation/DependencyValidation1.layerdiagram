@@ -63,17 +63,64 @@
     </layer>
     <layer Id="9d9971a6-b55f-4f50-ad27-f343f49f5ff7" name="Viventium.WebAPI.dll">
       <dependencyToLayers>
-        <dependencyFromLayerToLayer Id="181ef583-59f2-451e-a5e5-80419eb0427e" direction="Forward">
-          <layerMoniker Id="055bbe44-3508-4431-8924-a51186457834" />
-        </dependencyFromLayerToLayer>
         <dependencyFromLayerToLayer Id="0c74ab48-4912-4f3e-adcd-d95d53a90a3e" direction="Forward">
           <layerMoniker Id="4a02345d-c462-4206-8073-cc961fa40a65" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="100f9917-92de-435d-beab-4dacb8a67991" direction="Forward">
+          <layerMoniker Id="055bbe44-3508-4431-8924-a51186457834" />
         </dependencyFromLayerToLayer>
       </dependencyToLayers>
       <references>
         <reference Id="31099f11-9da6-4258-a300-60f6fa183448" name="Viventium.WebAPI.dll">
           <ArtifactNode Label="Viventium.WebAPI.dll" Category="CodeSchema_Assembly" Id="(Assembly=../Viventium.WebAPI/bin/Debug/net8.0/Viventium.WebAPI.dll)" />
           <ExpandedNode Id="(Assembly=Viventium.WebAPI)" Label="Viventium.WebAPI.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="97ae87e8-d108-4163-85b1-1d080d5c27e9" name="Viventium.Benchmark.dll">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="0df08ab2-72fc-46d0-91dc-94c68dd5d92b" direction="Forward">
+          <layerMoniker Id="055bbe44-3508-4431-8924-a51186457834" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="241e50c7-c8b9-414b-8e5a-749ed6747472" direction="Forward">
+          <layerMoniker Id="abc70eb7-2ab2-4d67-825b-b13d71973b34" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="32fa4b4d-71da-4add-a22e-ab8fe7611ff2" name="Viventium.Benchmark.dll">
+          <ArtifactNode Label="Viventium.Benchmark.dll" Category="CodeSchema_Assembly" Id="(Assembly=../Viventium.Benchmark/bin/Debug/net8.0/Viventium.Benchmark.dll)" />
+          <ExpandedNode Id="(Assembly=Viventium.Benchmark)" Label="Viventium.Benchmark.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="28860c92-0f74-4bb8-844c-d22ceaba2062" name="Viventium.Tests.dll">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="3fa42a95-2022-4806-a358-e72bce5cd205" direction="Forward">
+          <layerMoniker Id="abc70eb7-2ab2-4d67-825b-b13d71973b34" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="47f82063-8da8-4271-be14-182a9a430e05" direction="Forward">
+          <layerMoniker Id="055bbe44-3508-4431-8924-a51186457834" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="8339e8c8-f498-4a7b-90e9-ca61e905df52" direction="Forward">
+          <layerMoniker Id="9d9971a6-b55f-4f50-ad27-f343f49f5ff7" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="0e8617d4-588f-4bc1-b416-b568dfdc4e31" direction="Forward">
+          <layerMoniker Id="4a02345d-c462-4206-8073-cc961fa40a65" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="1c0c0fde-b278-4612-adf7-20e0ce2acc11" direction="Forward">
+          <layerMoniker Id="824104cf-e83f-4f09-b512-8a247bc5701c" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="184a5c70-0481-49a1-98b4-65308f5533c6" name="Viventium.Tests.dll">
+          <ArtifactNode Label="Viventium.Tests.dll" Category="CodeSchema_Assembly" Id="(Assembly=../Viventium.Tests/bin/Debug/net8.0/Viventium.Tests.dll)" />
+          <ExpandedNode Id="(Assembly=Viventium.Tests)" Label="Viventium.Tests.dll" Category="CodeSchema_Assembly">
             <Category Ref="FileSystem.Category.FileOfType.dll" />
             <LinkCategory Ref="Represents" />
           </ExpandedNode>

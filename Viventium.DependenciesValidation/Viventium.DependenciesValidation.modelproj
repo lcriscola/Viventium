@@ -9,6 +9,8 @@
     <ArchitectureToolsVersion>2.0.0.0</ArchitectureToolsVersion>
     <Name>Viventium.DependenciesValidation</Name>
     <RootNamespace>Viventium.DependenciesValidation</RootNamespace>
+	<ValidateArchitecture>true</ValidateArchitecture>
+
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
